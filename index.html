@@ -45,13 +45,8 @@
   .topbar .counter { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; letter-spacing: 0.3px; }
 
   /* ── LOGO ── */
-  .oftalmos-logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
-  .oftalmos-logo .logo-wordmark { display: flex; flex-direction: column; line-height: 1; gap: 3px; }
-  .oftalmos-logo .logo-name { font-size: 20px; font-weight: 700; letter-spacing: 3px; color: var(--brand); text-transform: uppercase; }
-  .oftalmos-logo .logo-sub  { font-size: 9px; font-weight: 500; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; }
-
-  .oftalmos-logo-sm .logo-name { font-size: 13px; letter-spacing: 2px; }
-  .oftalmos-logo-sm .logo-sub  { font-size: 7px; letter-spacing: 2px; }
+  .logo-img    { height: 52px; width: auto; display: block; }
+  .logo-img-sm { height: 28px; width: auto; display: block; }
 
   /* Badge */
   .tag-badge {
@@ -274,19 +269,7 @@
   <div class="welcome-inner">
 
     <div class="welcome-logo-wrap">
-      <div class="oftalmos-logo">
-        <div class="logo-mark">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="28" cy="28" r="24" stroke="#2D2B8A" stroke-width="2.6" fill="none"/>
-            <path d="M10 17 C14 6 42 6 48 17 C53 27 47 46 28 50" stroke="#2D2B8A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-            <path d="M14 13 C19 5 37 5 43 13" stroke="#2D2B8A" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-          </svg>
-        </div>
-        <div class="logo-wordmark">
-          <span class="logo-name">Oftalmos</span>
-          <span class="logo-sub">Day Hospital</span>
-        </div>
-      </div>
+      <img src="logo.png" alt="Oftalmos Day Hospital" class="logo-img">
     </div>
 
     <div class="tag-badge"><span class="tag-dot"></span>Avaliação Pós-Consulta</div>
@@ -314,19 +297,7 @@
 <div id="formScreen" class="screen">
   <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
   <div class="topbar">
-    <div class="oftalmos-logo oftalmos-logo-sm">
-      <div class="logo-mark">
-        <svg width="28" height="28" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="28" cy="28" r="24" stroke="#2D2B8A" stroke-width="2.6" fill="none"/>
-          <path d="M10 17 C14 6 42 6 48 17 C53 27 47 46 28 50" stroke="#2D2B8A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-          <path d="M14 13 C19 5 37 5 43 13" stroke="#2D2B8A" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-        </svg>
-      </div>
-      <div class="logo-wordmark">
-        <span class="logo-name">Oftalmos</span>
-        <span class="logo-sub">Day Hospital</span>
-      </div>
-    </div>
+    <img src="logo.png" alt="Oftalmos Day Hospital" class="logo-img-sm">
     <span class="counter" id="counter"></span>
   </div>
 
@@ -616,10 +587,7 @@ function submitForm() {
 
   const doneLogoWrap = document.createElement('div');
   doneLogoWrap.className = 'done-logo-wrap';
-  doneLogoWrap.innerHTML =
-    '<div class="oftalmos-logo" style="justify-content:center">' +
-    '<svg width="20" height="20" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="24" stroke="#2D2B8A" stroke-width="2.6" fill="none"/><path d="M10 17 C14 6 42 6 48 17 C53 27 47 46 28 50" stroke="#2D2B8A" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M14 13 C19 5 37 5 43 13" stroke="#2D2B8A" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>' +
-    '<div class="logo-wordmark"><span class="logo-name" style="font-size:12px;letter-spacing:2px">Oftalmos</span><span class="logo-sub" style="font-size:7px">Day Hospital</span></div></div>';
+  doneLogoWrap.innerHTML = '<img src="logo.png" alt="Oftalmos Day Hospital" style="height:32px;width:auto;">';
 
   inner.appendChild(check);
   inner.appendChild(h1);
