@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avaliação Pós-Consulta — Oftalmos Day Hospital</title>
+<meta name="description" content="Avalie sua experiência no Oftalmos Day Hospital. Leva menos de 1 minuto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --bg-soft: #F6F7FC;
+    --brand: #2D2B8A;
+    --sky: #4B6FD4;
+    --gradient: linear-gradient(135deg, #2D2B8A, #4B6FD4);
+    --text: #0F1A2E;
+    --text-muted: #6B7A8D;
+    --text-soft: #3D4F63;
+    --border: rgba(0,0,0,0.07);
+    --card: #F4F7FC;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    overflow-x: hidden;
+  }
+  ::placeholder { color: rgba(0,0,0,0.22); }
+  ::-webkit-scrollbar { width: 0; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  /* Subtle ambient glows */
+  .glow-1 { position: fixed; top: -20%; right: -15%; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(45,43,138,0.06) 0%, transparent 65%); pointer-events: none; z-index: 0; }
+  .glow-2 { position: fixed; bottom: -20%; left: -15%; width: 550px; height: 550px; border-radius: 50%; background: radial-gradient(circle, rgba(75,111,212,0.05) 0%, transparent 65%); pointer-events: none; z-index: 0; }
+
+  /* Progress */
+  .progress-track { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(0,0,0,0.07); z-index: 100; }
+  .progress-fill { height: 100%; background: var(--gradient); border-radius: 0 2px 2px 0; box-shadow: 0 0 10px rgba(45,43,138,0.3); transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+
+  /* Top bar */
+  .topbar { position: fixed; top: 3px; left: 0; right: 0; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; z-index: 50; background: linear-gradient(to bottom, #ffffff 60%, transparent); }
+  .topbar .counter { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; letter-spacing: 0.3px; }
+
+  /* ── LOGO ── */
+  .oftalmos-logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+  .oftalmos-logo .logo-wordmark { display: flex; flex-direction: column; line-height: 1; gap: 3px; }
+  .oftalmos-logo .logo-name { font-size: 20px; font-weight: 700; letter-spacing: 3px; color: var(--brand); text-transform: uppercase; }
+  .oftalmos-logo .logo-sub  { font-size: 9px; font-weight: 500; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; }
+
+  .oftalmos-logo-sm .logo-name { font-size: 13px; letter-spacing: 2px; }
+  .oftalmos-logo-sm .logo-sub  { font-size: 7px; letter-spacing: 2px; }
+
+  /* Badge */
+  .tag-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 14px; border-radius: 100px; margin-bottom: 28px;
+    border: 1px solid rgba(45,43,138,0.18);
+    background: rgba(45,43,138,0.06);
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--brand);
+  }
+  .tag-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brand); }
+
+  /* Screens */
+  .screen { display: none; flex-direction: column; align-items: center; min-height: 100vh; position: relative; z-index: 1; }
+  .screen.active { display: flex; }
+
+  /* ═══ WELCOME ═══ */
+  #welcome { justify-content: center; text-align: center; padding: 56px 24px 72px; animation: fadeUp 0.65s ease; }
+  .welcome-inner { width: min(100%, 860px); margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+  .welcome-logo-wrap { margin-bottom: 52px; }
+
+  #welcome h1 {
+    font-size: clamp(28px, 5.5vw, 44px); font-weight: 700; line-height: 1.18;
+    max-width: 680px; margin-bottom: 18px; color: var(--text); letter-spacing: -0.3px;
+  }
+  #welcome h1 em { font-style: normal; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  #welcome h2 {
+    font-size: clamp(15px, 2.8vw, 18px); font-weight: 400; line-height: 1.65;
+    color: var(--text-muted); max-width: 520px; margin-bottom: 44px;
+  }
+
+  .welcome-divider { width: 40px; height: 2px; background: var(--gradient); border-radius: 2px; margin: 0 auto 44px; opacity: 0.35; }
+
+  .btn-start {
+    padding: 16px 52px; background: var(--gradient); border-radius: 12px;
+    color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 0.3px;
+    box-shadow: 0 4px 24px rgba(45,43,138,0.25);
+    transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(45,43,138,0.35); }
+
+  .welcome-meta { display: flex; align-items: center; gap: 14px; margin-top: 20px; }
+  .welcome-meta span { font-size: 12px; color: rgba(0,0,0,0.28); }
+  .welcome-meta .sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(0,0,0,0.15); }
+
+  /* ═══ FORM ═══ */
+  #formScreen { overflow-y: auto; overflow-x: hidden; padding: 0; align-items: center; }
+  .question-wrap {
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: 100vh; width: 100%; max-width: 640px;
+    padding: 88px 28px 140px;
+  }
+
+  .q-section {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; margin-bottom: 16px; display: inline-block;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    opacity: 0.85;
+  }
+  .q-label {
+    font-size: clamp(20px, 4.2vw, 27px); font-weight: 600; line-height: 1.35;
+    margin-bottom: 6px; color: var(--text); letter-spacing: -0.2px;
+  }
+  .q-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 26px; line-height: 1.5; }
+  .q-spacer { height: 26px; }
+
+  /* Text input */
+  .text-input {
+    width: 100%; padding: 0 0 14px; background: transparent; border: none;
+    border-bottom: 2px solid rgba(45,43,138,0.15); color: var(--text);
+    font-size: clamp(18px, 4vw, 22px); font-weight: 400; outline: none;
+    font-family: inherit; transition: border-color 0.3s; caret-color: var(--brand);
+  }
+  .text-input:focus { border-bottom-color: rgba(45,43,138,0.5); }
+
+  /* Phone */
+  .phone-wrap { display: flex; align-items: flex-end; gap: 12px; width: 100%; }
+  .phone-prefix {
+    font-size: clamp(18px, 4vw, 22px); font-weight: 600; padding-bottom: 14px;
+    border-bottom: 2px solid rgba(45,43,138,0.15); color: rgba(0,0,0,0.35);
+    white-space: nowrap; transition: border-color 0.3s;
+  }
+  .phone-wrap:focus-within .phone-prefix { border-bottom-color: rgba(45,43,138,0.5); color: rgba(0,0,0,0.55); }
+  .phone-input { flex: 1; }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .opt-btn {
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 12px; color: var(--text-soft);
+    font-size: clamp(14px, 3vw, 15px); text-align: left; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .opt-btn:hover { background: #EEF1FA; border-color: rgba(45,43,138,0.18); }
+  .opt-btn.selected { background: rgba(45,43,138,0.07); border-color: rgba(45,43,138,0.35); color: var(--brand); }
+  .opt-btn .key {
+    width: 26px; height: 26px; border-radius: 7px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: monospace;
+    color: rgba(0,0,0,0.3); background: rgba(0,0,0,0.03);
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .opt-btn.selected .key { border-color: var(--brand); color: var(--brand); background: rgba(45,43,138,0.08); }
+  .opt-btn .label { font-weight: 400; line-height: 1.4; }
+  .opt-btn.selected .label { font-weight: 600; }
+
+  /* NPS */
+  .nps-wrap { width: 100%; }
+  .nps-extremes { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .nps-extremes span { font-size: 11px; color: var(--text-muted); font-style: italic; }
+  .nps-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 6px; }
+  .nps-btn {
+    aspect-ratio: 1; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    border: 1.5px solid rgba(0,0,0,0.08);
+    background: var(--card);
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+  .nps-btn:hover { background: #EEF1FA; border-color: rgba(45,43,138,0.22); color: var(--brand); }
+  .nps-btn.nps-det.selected { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.4);  color: #DC2626; }
+  .nps-btn.nps-neu.selected { background: rgba(202,138,4,0.08);  border-color: rgba(202,138,4,0.4);  color: #B45309; }
+  .nps-btn.nps-pro.selected { background: rgba(22,163,74,0.08);  border-color: rgba(22,163,74,0.4);  color: #15803D; }
+  .nps-hint { margin-top: 14px; text-align: center; font-size: 13px; color: var(--text-muted); min-height: 20px; font-style: italic; }
+
+  /* OK button */
+  .ok-row { margin-top: 26px; display: flex; align-items: center; gap: 14px; }
+  .btn-ok {
+    padding: 13px 34px; background: rgba(0,0,0,0.04); border-radius: 10px;
+    border: 1.5px solid rgba(0,0,0,0.08);
+    color: rgba(0,0,0,0.25); font-size: 15px; font-weight: 700;
+    transition: all 0.25s; cursor: pointer;
+  }
+  .btn-ok.enabled {
+    background: var(--gradient); color: #fff; border-color: transparent;
+    box-shadow: 0 4px 20px rgba(45,43,138,0.25);
+  }
+  .btn-ok.enabled:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(45,43,138,0.35); }
+  .ok-hint { font-size: 12px; color: rgba(0,0,0,0.25); }
+  .ok-hint strong { font-weight: 600; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; padding: 18px 24px 24px;
+    display: flex; justify-content: space-between; z-index: 50;
+    background: linear-gradient(to top, #ffffff 55%, transparent);
+  }
+  .nav-btn {
+    padding: 10px 20px; background: rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.07); border-radius: 8px;
+    color: var(--text-muted); font-size: 14px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover:not(:disabled) { background: rgba(0,0,0,0.06); }
+  .nav-btn:disabled { color: rgba(0,0,0,0.18); cursor: default; }
+
+  /* ═══ DONE ═══ */
+  #doneScreen {
+    overflow-y: auto; align-items: center; justify-content: center;
+    padding: 64px 24px 80px; text-align: center;
+    animation: fadeUp 0.65s ease;
+  }
+  .done-inner { display: flex; flex-direction: column; align-items: center; max-width: 460px; width: 100%; }
+  .done-check {
+    width: 80px; height: 80px; border-radius: 50%; background: var(--gradient);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 30px; box-shadow: 0 8px 32px rgba(45,43,138,0.25); flex-shrink: 0;
+  }
+  .done-check svg { width: 36px; height: 36px; }
+  .done-inner h1 { font-size: clamp(24px, 5vw, 33px); font-weight: 700; margin-bottom: 12px; line-height: 1.2; color: var(--text); }
+  .done-inner h1 em { font-style: normal; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .done-inner p { font-size: 15px; color: var(--text-muted); line-height: 1.65; margin-bottom: 36px; max-width: 380px; }
+
+  .summary-card {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 18px; padding: 22px 24px; width: 100%; text-align: left; margin-bottom: 12px;
+  }
+  .summary-card-title {
+    font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 16px;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .s-row { padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+  .s-row:last-child { border-bottom: none; }
+  .s-row .s-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; letter-spacing: 0.3px; text-transform: uppercase; }
+  .s-row .s-value { font-size: 14px; color: var(--text-soft); font-weight: 500; }
+
+  .done-logo-wrap { margin-top: 36px; opacity: 0.25; }
+
+  /* Animations */
+  @keyframes fadeUp  { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (max-width: 480px) {
+    .question-wrap { padding: 80px 20px 130px; }
+    #welcome { padding: 44px 20px 60px; }
+    .options { gap: 7px; }
+    .opt-btn { padding: 12px 14px; }
+    .nps-grid { gap: 4px; }
+    .nps-btn { font-size: 11px; border-radius: 8px; }
+    .oftalmos-logo .logo-name { font-size: 16px; letter-spacing: 2px; }
+  }
+  @media (min-width: 960px) {
+    #welcome { padding-left: 40px; padding-right: 40px; }
+    .question-wrap { max-width: 760px; padding-left: 40px; padding-right: 40px; }
+    .q-label, .q-subtitle, .options, .text-input, .phone-wrap, .nps-wrap { max-width: 660px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<!-- ═══════════════════════════════ WELCOME ═══════════════════════════════ -->
+<div id="welcome" class="screen active">
+  <div class="welcome-inner">
+
+    <div class="welcome-logo-wrap">
+      <div class="oftalmos-logo">
+        <div class="logo-mark">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="28" cy="28" r="24" stroke="#2D2B8A" stroke-width="2.6" fill="none"/>
+            <path d="M10 17 C14 6 42 6 48 17 C53 27 47 46 28 50" stroke="#2D2B8A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            <path d="M14 13 C19 5 37 5 43 13" stroke="#2D2B8A" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="logo-wordmark">
+          <span class="logo-name">Oftalmos</span>
+          <span class="logo-sub">Day Hospital</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tag-badge"><span class="tag-dot"></span>Avaliação Pós-Consulta</div>
+
+    <h1>Como foi sua experiência no <em>Oftalmos Day Hospital?</em></h1>
+
+    <h2>Sua opinião é o que nos guia. Responda 3 perguntas rápidas sobre a consulta de hoje e nos ajude a oferecer sempre o melhor atendimento.</h2>
+
+    <div class="welcome-divider"></div>
+
+    <button class="btn-start" onclick="startForm()">Iniciar avaliação →</button>
+
+    <div class="welcome-meta">
+      <span>3 perguntas</span>
+      <div class="sep"></div>
+      <span>menos de 1 minuto</span>
+      <div class="sep"></div>
+      <span>respostas confidenciais</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ FORM ═══════════════════════════════ -->
+<div id="formScreen" class="screen">
+  <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+  <div class="topbar">
+    <div class="oftalmos-logo oftalmos-logo-sm">
+      <div class="logo-mark">
+        <svg width="28" height="28" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="28" cy="28" r="24" stroke="#2D2B8A" stroke-width="2.6" fill="none"/>
+          <path d="M10 17 C14 6 42 6 48 17 C53 27 47 46 28 50" stroke="#2D2B8A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M14 13 C19 5 37 5 43 13" stroke="#2D2B8A" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="logo-wordmark">
+        <span class="logo-name">Oftalmos</span>
+        <span class="logo-sub">Day Hospital</span>
+      </div>
+    </div>
+    <span class="counter" id="counter"></span>
+  </div>
+
+  <div class="question-wrap" id="questionArea"></div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn" id="btnPrev" onclick="goPrev()">↑ Voltar</button>
+    <button class="nav-btn" id="btnNext" onclick="goNext()">Avançar ↓</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ DONE ═══════════════════════════════ -->
+<div id="doneScreen" class="screen"></div>
+
+<script>
+const Q = [
+  {
+    id: "nome",
+    section: "Vamos começar",
+    label: "Qual o seu nome completo?",
+    subtitle: null,
+    type: "text",
+    placeholder: "Digite seu nome",
+    required: true
+  },
+  {
+    id: "telefone",
+    section: "Contato",
+    label: "E seu WhatsApp com DDD?",
+    subtitle: "Para que possamos entrar em contato se necessário.",
+    type: "phone",
+    required: true
+  },
+  {
+    id: "medico",
+    section: "Consulta de hoje",
+    label: "Com qual médico você foi atendido?",
+    subtitle: null,
+    type: "text",
+    placeholder: "Dr(a).",
+    required: true
+  },
+  {
+    id: "clareza_diagnostico",
+    section: "Pergunta 1 de 3",
+    label: "O médico explicou seu diagnóstico e as opções de tratamento de forma clara?",
+    subtitle: null,
+    type: "select",
+    required: true,
+    options: ["Sim", "Parcialmente", "Não"]
+  },
+  {
+    id: "seguranca_decisao",
+    section: "Pergunta 2 de 3",
+    label: "Após a consulta, você se sente seguro para tomar uma decisão sobre o tratamento ou procedimento recomendado?",
+    subtitle: null,
+    type: "select",
+    required: true,
+    options: ["Sim", "Ainda tenho dúvidas", "Não"]
+  },
+  {
+    id: "nps",
+    section: "Pergunta 3 de 3",
+    label: "Em uma escala de 0 a 10, qual a probabilidade de você recomendar o Oftalmos Day Hospital para amigos ou familiares?",
+    subtitle: null,
+    type: "nps",
+    required: true
+  }
+];
+
+const KEYS = "ABCDEFGHIJ";
+let idx = 0;
+let answers = {};
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startForm() { show('formScreen'); render(); }
+
+function canProceed() {
+  const q = Q[idx];
+  if (!q || !q.required) return true;
+  const v = answers[q.id];
+  if (q.type === 'nps') return v !== undefined && v !== null && v !== '';
+  if (Array.isArray(v)) return v.length > 0;
+  if (q.type === 'phone') return (v || '').replace(/\D/g, '').length >= 10;
+  return v && v.toString().trim().length >= 2;
+}
+
+function formatPhone(digits) {
+  digits = digits.slice(0, 11);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 7) return '(' + digits.slice(0,2) + ') ' + digits.slice(2);
+  return '(' + digits.slice(0,2) + ') ' + digits.slice(2,7) + '-' + digits.slice(7);
+}
+
+function esc(s) { return String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+function npsCategory(n) {
+  if (n <= 6) return 'nps-det';
+  if (n <= 8) return 'nps-neu';
+  return 'nps-pro';
+}
+
+function npsHintText(n) {
+  if (n === undefined || n === null || n === '') return '';
+  if (n === 0)  return 'Certamente não recomendaria';
+  if (n <= 3)   return 'Muito improvável que recomendasse';
+  if (n <= 6)   return 'Improvável que recomendasse';
+  if (n === 7)  return 'Talvez recomendasse';
+  if (n === 8)  return 'Provavelmente recomendaria';
+  if (n === 9)  return 'Muito provável que recomendasse';
+  if (n === 10) return 'Com certeza recomendaria!';
+  return '';
+}
+
+function render() {
+  const q = Q[idx];
+  const total = Q.length;
+  const pct = ((idx + 1) / total) * 100;
+
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('counter').textContent = (idx + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = idx === 0;
+  document.getElementById('btnNext').style.opacity = canProceed() ? '1' : '0.3';
+
+  const area = document.getElementById('questionArea');
+  let html = '';
+  html += '<div class="q-section">' + q.section + '</div>';
+  html += '<div class="q-label">' + q.label + '</div>';
+  if (q.subtitle) {
+    html += '<div class="q-subtitle">' + q.subtitle + '</div>';
+  } else {
+    html += '<div class="q-spacer"></div>';
+  }
+
+  if (q.type === 'text') {
+    const val = esc(answers[q.id] || '');
+    html += '<input class="text-input" id="qInput" type="text" placeholder="' + (q.placeholder || '') + '" value="' + val + '" autofocus autocomplete="off" spellcheck="false">';
+    html += okRow();
+
+  } else if (q.type === 'phone') {
+    const digits = (answers[q.id] || '').replace(/\D/g, '');
+    html += '<div class="phone-wrap">';
+    html += '<span class="phone-prefix">+55</span>';
+    html += '<input class="text-input phone-input" id="qInput" type="tel" inputmode="numeric" placeholder="(16) 99999-9999" maxlength="15" value="' + formatPhone(digits) + '" autofocus autocomplete="tel">';
+    html += '</div>';
+    html += okRow();
+
+  } else if (q.type === 'select') {
+    html += '<div class="options" id="optionsGroup">';
+    q.options.forEach((opt, i) => {
+      const sel = answers[q.id] === opt ? ' selected' : '';
+      html += '<button class="opt-btn' + sel + '" data-val="' + esc(opt) + '" onclick="selectOption(this)" style="animation:slideUp 0.22s ease ' + (i * 0.045) + 's both">';
+      html += '<span class="key">' + KEYS[i] + '</span><span class="label">' + opt + '</span>';
+      html += '</button>';
+    });
+    html += '</div>';
+    html += okRow();
+
+  } else if (q.type === 'nps') {
+    const cur = answers[q.id];
+    html += '<div class="nps-wrap">';
+    html += '<div class="nps-extremes"><span>0 — Nunca indicaria</span><span>10 — Com certeza indicaria</span></div>';
+    html += '<div class="nps-grid" id="npsGrid">';
+    for (let n = 0; n <= 10; n++) {
+      const cat = npsCategory(n);
+      const isSel = cur === n;
+      html += '<button class="nps-btn ' + cat + (isSel ? ' selected' : '') + '" onclick="selectNps(' + n + ')" style="animation:slideUp 0.2s ease ' + (n * 0.028) + 's both">' + n + '</button>';
+    }
+    html += '</div>';
+    html += '<div class="nps-hint" id="npsHint">' + (cur !== undefined ? npsHintText(cur) : '') + '</div>';
+    html += '</div>';
+    html += okRow();
+  }
+
+  area.innerHTML = html;
+  area.style.animation = 'none';
+  area.offsetHeight;
+  area.style.animation = 'slideUp 0.3s ease';
+
+  const inp = document.getElementById('qInput');
+  if (inp) {
+    setTimeout(() => { try { inp.focus(); } catch(e){} }, 60);
+    if (q.type === 'phone') {
+      inp.addEventListener('input', () => {
+        const d = inp.value.replace(/\D/g, '').slice(0, 11);
+        inp.value = formatPhone(d);
+        answers[q.id] = inp.value;
+        updateOkBtn();
+      });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); goNext(); } });
+    } else {
+      inp.addEventListener('input', () => { answers[q.id] = inp.value; updateOkBtn(); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); goNext(); } });
+    }
+  }
+}
+
+function okRow() {
+  const ok = canProceed();
+  const isLast = idx === Q.length - 1;
+  return '<div class="ok-row">' +
+    '<button class="btn-ok' + (ok ? ' enabled' : '') + '" id="btnOk" onclick="goNext()">' + (isLast ? 'Enviar avaliação ✓' : 'OK →') + '</button>' +
+    '<span class="ok-hint">ou pressione <strong>Enter ↵</strong></span>' +
+    '</div>';
+}
+
+function updateOkBtn() {
+  const btn = document.getElementById('btnOk');
+  if (btn) btn.classList.toggle('enabled', canProceed());
+  document.getElementById('btnNext').style.opacity = canProceed() ? '1' : '0.3';
+}
+
+function selectOption(el) {
+  answers[Q[idx].id] = el.dataset.val;
+  document.querySelectorAll('#optionsGroup .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  updateOkBtn();
+}
+
+function selectNps(n) {
+  answers[Q[idx].id] = n;
+  document.querySelectorAll('#npsGrid .nps-btn').forEach((b, i) => {
+    b.classList.remove('selected');
+    if (i === n) b.classList.add('selected');
+  });
+  const hint = document.getElementById('npsHint');
+  if (hint) hint.textContent = npsHintText(n);
+  updateOkBtn();
+}
+
+function goNext() {
+  if (Q[idx].required && !canProceed()) return;
+  if (idx < Q.length - 1) { idx++; render(); }
+  else { submitForm(); }
+}
+
+function goPrev() { if (idx > 0) { idx--; render(); } }
+
+function submitForm() {
+  show('doneScreen');
+  const done = document.getElementById('doneScreen');
+
+  const inner = document.createElement('div');
+  inner.className = 'done-inner';
+
+  const check = document.createElement('div');
+  check.className = 'done-check';
+  check.innerHTML = '<svg viewBox="0 0 36 36" fill="none"><path d="M8 18l7 7 13-13" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const h1 = document.createElement('h1');
+  const firstName = (answers.nome || '').split(' ')[0];
+  h1.innerHTML = firstName ? 'Obrigado, <em>' + firstName + '!</em>' : 'Avaliação <em>registrada!</em>';
+
+  const p = document.createElement('p');
+  p.textContent = 'Sua opinião é fundamental para que continuemos entregando excelência em cada consulta no Oftalmos Day Hospital.';
+
+  const card = document.createElement('div');
+  card.className = 'summary-card';
+  const cardTitle = document.createElement('div');
+  cardTitle.className = 'summary-card-title';
+  cardTitle.textContent = 'Resumo da avaliação';
+  card.appendChild(cardTitle);
+
+  function npsResultLabel(n) {
+    if (n === undefined || n === null || n === '') return null;
+    const cat = n <= 6 ? 'Detrator' : n <= 8 ? 'Neutro' : 'Promotor';
+    return n + ' / 10 — ' + cat;
+  }
+
+  [
+    { label: 'Paciente', value: answers.nome },
+    { label: 'Médico responsável', value: answers.medico },
+    { label: 'Clareza no diagnóstico', value: answers.clareza_diagnostico },
+    { label: 'Segurança para decidir', value: answers.seguranca_decisao },
+    { label: 'Nota de recomendação (NPS)', value: npsResultLabel(answers.nps) },
+  ].filter(r => r.value).forEach(r => {
+    const row = document.createElement('div');
+    row.className = 's-row';
+    row.innerHTML = '<div class="s-label">' + r.label + '</div><div class="s-value">' + r.value + '</div>';
+    card.appendChild(row);
+  });
+
+  const doneLogoWrap = document.createElement('div');
+  doneLogoWrap.className = 'done-logo-wrap';
+  doneLogoWrap.innerHTML =
+    '<div class="oftalmos-logo" style="justify-content:center">' +
+    '<svg width="20" height="20" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="24" stroke="#2D2B8A" stroke-width="2.6" fill="none"/><path d="M10 17 C14 6 42 6 48 17 C53 27 47 46 28 50" stroke="#2D2B8A" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M14 13 C19 5 37 5 43 13" stroke="#2D2B8A" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>' +
+    '<div class="logo-wordmark"><span class="logo-name" style="font-size:12px;letter-spacing:2px">Oftalmos</span><span class="logo-sub" style="font-size:7px">Day Hospital</span></div></div>';
+
+  inner.appendChild(check);
+  inner.appendChild(h1);
+  inner.appendChild(p);
+  inner.appendChild(card);
+  inner.appendChild(doneLogoWrap);
+  done.appendChild(inner);
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('formScreen').classList.contains('active')) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); goNext(); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); goPrev(); }
+});
+</script>
+</body>
+</html>
