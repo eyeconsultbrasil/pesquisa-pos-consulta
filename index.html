@@ -342,7 +342,7 @@ const Q = [
   },
   {
     id: "clareza_diagnostico",
-    section: "Pergunta 1 de 3",
+    section: "Pergunta 1 de 7",
     label: "O médico explicou seu diagnóstico e as opções de tratamento de forma clara?",
     subtitle: null,
     type: "select",
@@ -351,7 +351,7 @@ const Q = [
   },
   {
     id: "seguranca_decisao",
-    section: "Pergunta 2 de 3",
+    section: "Pergunta 2 de 7",
     label: "Após a consulta, você se sente seguro para tomar uma decisão sobre o tratamento ou procedimento recomendado?",
     subtitle: null,
     type: "select",
@@ -359,8 +359,50 @@ const Q = [
     options: ["Sim", "Ainda tenho dúvidas", "Não"]
   },
   {
+    id: "tempo_permanencia",
+    section: "Pergunta 3 de 7",
+    label: "Quanto tempo você permaneceu na clínica hoje?",
+    subtitle: null,
+    type: "select",
+    required: true,
+    options: [
+      "Menos de 30 minutos",
+      "Entre 30 minutos e 1 hora",
+      "Entre 1 hora e 1 hora e meia",
+      "Acima de 2 horas",
+      "Acima de 3 horas"
+    ]
+  },
+  {
+    id: "espera_adequada",
+    section: "Pergunta 4 de 7",
+    label: "O tempo de espera foi adequado?",
+    subtitle: null,
+    type: "select",
+    required: true,
+    options: ["Sim", "Parcialmente", "Não"]
+  },
+  {
+    id: "tempo_medico",
+    section: "Pergunta 5 de 7",
+    label: "Você considera que o médico dedicou tempo suficiente durante a consulta?",
+    subtitle: null,
+    type: "select",
+    required: true,
+    options: ["Sim", "Parcialmente", "Não"]
+  },
+  {
+    id: "avaliacao_tempo",
+    section: "Pergunta 6 de 7",
+    label: "Como avalia sua experiência geral em relação ao tempo de atendimento?",
+    subtitle: null,
+    type: "select",
+    required: true,
+    options: ["Excelente", "Boa", "Regular", "Ruim"]
+  },
+  {
     id: "nps",
-    section: "Pergunta 3 de 3",
+    section: "Pergunta 7 de 7",
     label: "Em uma escala de 0 a 10, qual a probabilidade de você recomendar o Oftalmos Day Hospital para amigos ou familiares?",
     subtitle: null,
     type: "nps",
@@ -577,6 +619,10 @@ function submitForm() {
     { label: 'Médico responsável', value: answers.medico },
     { label: 'Clareza no diagnóstico', value: answers.clareza_diagnostico },
     { label: 'Segurança para decidir', value: answers.seguranca_decisao },
+    { label: 'Tempo na clínica', value: answers.tempo_permanencia },
+    { label: 'Tempo de espera adequado', value: answers.espera_adequada },
+    { label: 'Tempo dedicado pelo médico', value: answers.tempo_medico },
+    { label: 'Avaliação do tempo geral', value: answers.avaliacao_tempo },
     { label: 'Nota de recomendação (NPS)', value: npsResultLabel(answers.nps) },
   ].filter(r => r.value).forEach(r => {
     const row = document.createElement('div');
